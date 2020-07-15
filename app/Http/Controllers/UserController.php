@@ -30,7 +30,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = $this->ldap->search()->users()->get();
+        $users = $this->ldap->search()->where('objectclass', '=', 'person')->sortBy('cn', 'asc')->get();
 
         return response()->json($users);
     }
@@ -53,7 +53,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //TODO
     }
 
     /**
@@ -61,15 +61,24 @@ class UserController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function show($username=null, $password=null)
+    public function checkValidateUser(Request $user)
     {
-        
-        $username = 'jrodriguez';
-        $ldapuser = $this->ldap->search()
-                    ->where(env('LDAP_USER_BIND_ATTRIBUTE'), '=', $username)
-                    ->first();
-                            
-        return response()->json(['principal_username' => $ldapuser->getUserPrincipalName()]);
+
+        $username = $user->username;
+        $password = $user->password;
+
+        $user_format = env('LDAP_USER_FORMAT');
+        $userdn = sprintf($user_format, $username);
+        $result = [];
+
+        /**
+         * Check is user auth
+         */
+        if ($this->ldap->auth()->attempt($userdn, $password, $bindAsUser = true)) {
+            $result = $this->getInfo($username);
+        }
+
+        return $result;
     }
 
     /**
@@ -80,7 +89,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        //TODO
     }
 
     /**
@@ -92,7 +101,7 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        //TODO
     }
 
     /**
@@ -103,6 +112,35 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        //TODO
+    }
+
+    /**
+     * Return user info
+     *
+     * @param Request $user name user
+     * @return array
+     */
+    public function getUser(Request $user)
+    {
+        return $this->getInfo($user->username);
+    }
+
+    private function getInfo($username)
+    {
+        $result = [];
+        $ldapuser = $this->ldap->search()
+            ->where(env('LDAP_USER_BIND_ATTRIBUTE'), '=', $username)
+            ->first();
+
+        if ($ldapuser) {
+            $result = [
+                'email'     => str_replace('cemic1', 'cemic', $ldapuser->mail[0]),
+                'nombre'   => $ldapuser->cn[0],
+                'usuario'   => $ldapuser->samaccountname[0]
+            ];
+        }
+
+        return response()->json($result);
     }
 }
