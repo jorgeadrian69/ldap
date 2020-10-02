@@ -143,4 +143,24 @@ class UserController extends Controller
 
         return response()->json($result);
     }
+
+    public function checkCamillero(Request $user)
+    {
+
+        $username = $user->username;
+        $password = $user->password;
+
+        $user_format = env('LDAP_USER_FORMAT');
+        $userdn = sprintf($user_format, $username);
+        $result = [];
+
+        /**
+         * Check is user auth
+         */
+        if ($this->ldap->auth()->attempt($userdn, $password, $bindAsUser = true)) {
+            $result = $this->getInfo($username);
+        }
+
+        return response()->json($result);
+    }
 }

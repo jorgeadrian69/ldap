@@ -1,7 +1,5 @@
 <?php
-
-use Illuminate\Http\Request;
-
+header('Access-Control-Allow-Origin: *');
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -24,3 +22,5 @@ Route::get('usuarios', 'UserController@index');
 Route::get('usuario/{username}', 'UserController@getUser');
 // });
 Route::post('usuario', 'UserController@checkValidateUser');
+
+Route::post('camillero', 'UserController@checkCamillero');
