@@ -1,7 +1,5 @@
 <?php
-
-use Illuminate\Http\Request;
-
+header('Access-Control-Allow-Origin: *');
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,3 +14,13 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+// Route::prefix('api')->group(function () {
+Route::get('usuarios', 'UserController@index');
+// Route::get('usuario/{user}', 'UserController@show');
+Route::get('usuario/{username}', 'UserController@getUser');
+// });
+Route::post('usuario', 'UserController@checkValidateUser');
+
+Route::post('camillero', 'UserController@checkCamillero');
