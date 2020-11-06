@@ -16,4 +16,5 @@ Route::get('/', function () {
 });
 
 
-Route::get('/users','UserController@show');
+Route::get('/users','UserController@index');
+Route::get('/user','UserController@show');
