@@ -104,12 +104,8 @@ class UserController extends Controller
         if ($this->ldap->auth()->attempt($userdn, $password, $bindAsUser = true)) {
             $result = $this->getInfo($username);
         }
-
-<<<<<<< HEAD
+		
         return $result;
-=======
-        return response()->json($result);
->>>>>>> a1acc7ef79300612bc2b132f1873362a16fd6f8a
     }
 
     /**
@@ -147,12 +143,6 @@ class UserController extends Controller
     }
 
     /**
-<<<<<<< HEAD
-     * Return user info
-     *
-     * @param Request $user name user
-     * @return array
-=======
      * @OA\Get(
      *     path="/api/usuario/{username}",
      *     summary="Devuelve los datos básicos",
@@ -174,7 +164,6 @@ class UserController extends Controller
      *         description="Array vacio con datos no encontrados."
      *     )
      * )
->>>>>>> a1acc7ef79300612bc2b132f1873362a16fd6f8a
      */
     public function getUser(Request $user)
     {
@@ -196,14 +185,9 @@ class UserController extends Controller
             ];
         }
 
-<<<<<<< HEAD
         return response()->json($result)->header('Access-Control-Allow-Origin', 'http://localhost');
     }
-=======
-        return response()->json($result);
-    }
 
->>>>>>> a1acc7ef79300612bc2b132f1873362a16fd6f8a
     public function checkCamillero(Request $user)
     {
 
