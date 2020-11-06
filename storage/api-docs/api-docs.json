@@ -1,0 +1,90 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Usuarios LDAP",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost"
+        }
+    ],
+    "paths": {
+        "/api/usuario": {
+            "post": {
+                "summary": "Ingreso al LDAP",
+                "description": "Login con usuario y contraseña de Windows.",
+                "operationId": "App\\Http\\Controllers\\UserController::checkValidateUser",
+                "requestBody": {
+                    "description": "Credenciales de Usuario y Contraseña.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "username",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "jrodriguez"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "PassWord12345"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "422": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Sorry, wrong email address or password. Please try again"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/usuario/{username}": {
+            "get": {
+                "summary": "Devuelve los datos básicos",
+                "operationId": "App\\Http\\Controllers\\UserController::getUser",
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "query",
+                        "description": "Entrada de datos",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retorna el email, nombre completo y nickname del usuario."
+                    },
+                    "400": {
+                        "description": "Array vacio con datos no encontrados."
+                    }
+                }
+            }
+        }
+    }
+}

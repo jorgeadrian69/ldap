@@ -6,6 +6,12 @@ use App\User;
 use Illuminate\Http\Request;
 use Adldap\AdldapInterface;
 
+/**
+ * @OA\Info(title="API Usuarios LDAP", version="1.0")
+ *
+ * @OA\Server(url="http://localhost")
+ */
+
 class UserController extends Controller
 {
     /**
@@ -23,11 +29,7 @@ class UserController extends Controller
         $this->ldap = $ldap;
     }
 
-    /**
-     * Displays the all LDAP users.
-     *
-     * @return json
-     */
+
     public function index()
     {
         $users = $this->ldap->search()->where('objectclass', '=', 'person')->sortBy('cn', 'asc')->get();
@@ -57,9 +59,34 @@ class UserController extends Controller
     }
 
     /**
-     * Displays the specified LDAP user.
-     *
-     * @return \Illuminate\View\View
+     * @OA\Post(
+     * path="/api/usuario",
+     * summary="Ingreso al LDAP",
+     * description="Login con usuario y contraseña de Windows.",
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Credenciales de Usuario y Contraseña.",
+     *    @OA\JsonContent(
+     *       required={"username","password"},
+     *       @OA\Property(property="username", type="string", example="jrodriguez"),
+     *       @OA\Property(property="password", type="string", format="password", example="PassWord12345"),
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=422,
+     *    description="Error de Credenciales",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
+     *        )
+     *     ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Success",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="user", type="object", ref="#/components/schemas/User"),
+     *    )
+     *  ),
+     * )
      */
     public function checkValidateUser(Request $user)
     {
@@ -78,7 +105,11 @@ class UserController extends Controller
             $result = $this->getInfo($username);
         }
 
+<<<<<<< HEAD
         return $result;
+=======
+        return response()->json($result);
+>>>>>>> a1acc7ef79300612bc2b132f1873362a16fd6f8a
     }
 
     /**
@@ -116,10 +147,34 @@ class UserController extends Controller
     }
 
     /**
+<<<<<<< HEAD
      * Return user info
      *
      * @param Request $user name user
      * @return array
+=======
+     * @OA\Get(
+     *     path="/api/usuario/{username}",
+     *     summary="Devuelve los datos básicos",
+     *     @OA\Parameter(
+     *         name="username",
+     *         in="query",
+     *         @OA\Schema(
+     *           type="string"
+     *         ),
+     *         description="Entrada de datos",
+     *         required=true,
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Retorna el email, nombre completo y nickname del usuario."
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Array vacio con datos no encontrados."
+     *     )
+     * )
+>>>>>>> a1acc7ef79300612bc2b132f1873362a16fd6f8a
      */
     public function getUser(Request $user)
     {
@@ -141,8 +196,14 @@ class UserController extends Controller
             ];
         }
 
+<<<<<<< HEAD
         return response()->json($result)->header('Access-Control-Allow-Origin', 'http://localhost');
     }
+=======
+        return response()->json($result);
+    }
+
+>>>>>>> a1acc7ef79300612bc2b132f1873362a16fd6f8a
     public function checkCamillero(Request $user)
     {
 
